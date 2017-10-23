@@ -62,12 +62,12 @@ public class ReadFiles {
 						// assigns the tokens to items
 						items[r][c]=z.nextToken();				
 					}
-					//loop to next row
+					// loop to next row
 					r++;
 				}
 			}
 			// close the reader
-			//reader.close();
+			// reader.close();
 			
 		}catch(Exception e){
 			System.out.println(e);

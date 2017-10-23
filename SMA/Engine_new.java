@@ -1,11 +1,9 @@
 import java.math.*;
 
-
-public class BacktestEngine extends RollingMean{
+public class Engine_new extends RollingMean{
 	
 	int winShort;
 	int winLong;
-	int bollcount=0, normcount=0;
 	float investment;
 	
 	float fee;
@@ -16,44 +14,35 @@ public class BacktestEngine extends RollingMean{
 	float[] logRet;
 	float[] longMean;
 	float[] shortMean;
-	float[] bollinger;
 	
 	//constructor
-	BacktestEngine(){
+	Engine_new(){
 		portfolio = new float[series.length];
 		shares = new float[series.length];
 		logRet = new float[series.length];
 		longMean = new float[series.length];
 		shortMean = new float[series.length];
-		bollinger = new float[series.length];
 	}
 	
-    public static float[] combine(float[] a, float[] b){
-        int length = a.length ;
-        float[] result = new float[length];
-        for(int i=0;i<length;i++){
-        	result[i]=a[i] + b[i];
-        }
-        return result;
-    }
-	
-	public void setInvestment(float inv){
-		investment=inv; //1000;
-		// fee=0.0016;
+	public void setInvestment(int inv){
+
+		investment=inv;//1000;
+		//fee=0.0016;
 		// initialize portfolio array new
 		for(int i = 0; i < portfolio.length; i++) {
-            portfolio[i] = investment;//0;
-            //logRet[i]=0;			
+            portfolio[i] = investment;
+            //logRet[i]=0;
         }  
 	}
 	
 	public void reset(){
+
 		for(int i = 0; i < series.length; i++) {
-            portfolio[i] = investment; //0;
+            portfolio[i] = investment;
     		shares[i] = 0;
     		logRet[i] = 0;
     		longMean[i] = 0;
-    		shortMean[i] = 0;    		
+    		shortMean[i] = 0;
 		}
 	}
 	
@@ -61,9 +50,6 @@ public class BacktestEngine extends RollingMean{
 		shares[pos]= portfolio[pos-1]/series[pos];
 		portfolio[pos]=(float) ((shares[pos] * series[pos]) * (1.0 - 0.0016));	//fee is hard coded
 		marketPos=true;
-		if(portfolio[pos]<10){
-			System.out.println("Alarm!");
-		}
 	}
 	
 	public void exitMarket(int pos){
@@ -94,7 +80,7 @@ public class BacktestEngine extends RollingMean{
 	}
 
 	public void SMAcrossover(int shortW, int longW){
-		marketPos = false;
+		marketPos=false;
 		winShort = shortW;
 		winLong = longW;
 		
@@ -105,10 +91,7 @@ public class BacktestEngine extends RollingMean{
         longMean = computeSMA(winLong);
         shortMean = computeSMA(winShort);
         
-        // upper bollinger boundary
-        bollinger = combine(longMean,rollingSTD(2*winLong));
-        
-        System.out.printf("\nShort win: %s\n",shortW);
+        System.out.printf("Short win: %s\n",shortW);
         System.out.printf("Long win: %s",longW);
         System.out.println("\n");
 	
@@ -118,30 +101,18 @@ public class BacktestEngine extends RollingMean{
 			logReturn(i);
 		
 			//check if it is to buy or sell:
-			
-			if(shortMean[i]>longMean[i] )
+			if(shortMean[i]>longMean[i])
 			{
-				if(marketPos==false && series[i]>bollinger[i])
+				if(marketPos==false)
 				{
+					//System.out.println("BUY");
 					enterMarket(i);
-					/*if( series[i]>bollinger[i]){
-						System.out.println("Bollinger hit"); 
-						bollcount+=1;
-					}
-					{
-						System.out.println("Normal hit \n");
-						normcount+=1;
-					}*/
-				}else if(marketPos==false){
-					downPortfolio(i);
-				}
-				else{
+				}else{
 					upPortfolio(i);
 				}
-			}			
-			else
+			}
+			else if(shortMean[i]<=longMean[i])
 			{
-				//System.out.println("Down");
 				if(marketPos==true){
 					exitMarket(i);
 					//System.out.println("SELL");
@@ -149,13 +120,14 @@ public class BacktestEngine extends RollingMean{
 					downPortfolio(i);
 				}
 			}
-
+			//System.out.printf("Portfolio after SMA: %s \n", portfolio[i]);
+			//System.out.printf("shares: %s ", shares[i]);
 		}
        
 		System.out.printf("Portfolio after SMA: %s ", portfolio[portfolio.length-1]);
 		//System.out.println();
 		//System.out.printf("Only Hodl: %s", Hodl());
-
+		System.out.println();
 	}
 	
 	public void printPortfolio(){
