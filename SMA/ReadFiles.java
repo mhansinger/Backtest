@@ -7,9 +7,14 @@ public class ReadFiles {
 	File file;// = new File("Data/Series.csv");
 	int row = 0;
 	String[][] items;
-	float[] dataArray; 
+	float[] dataArray; 	// is the actual time series
+
 	Scanner scanner = new Scanner(System.in);
+	//Scanner scanner2 = new Scanner(System.in);
 	String name;
+	String zahl;
+	
+	float limiter=1;
 	
 	// read in file name
 	public void getfilename(){
@@ -18,6 +23,16 @@ public class ReadFiles {
 	 file = new File(name);
 	 scanner.close();
 	}
+
+/*
+	public void getlimit(){
+		System.out.println("Set the limit (removes spikes)");
+		zahl = scanner2.next();
+		//System.out.printf("%s",zahl);
+		//limiter=Float.parseFloat(string);
+		scanner.close();
+	}
+	*/
 	
 	
 	// check if file exists
@@ -95,7 +110,11 @@ public class ReadFiles {
 		dataArray = new float[findRowNumber()];
 		//loop over the items
 		for(int x=0; x<items.length;x++){
-			dataArray[x] = new Float(items[x][2]);
+			dataArray[x] = Float.parseFloat(items[x][2]);	// issue resolved...
+			if(dataArray[x]>limiter)
+			{
+				dataArray[x] = dataArray[x-1];
+			}
 		}
 	}
 	

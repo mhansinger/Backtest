@@ -1,27 +1,22 @@
 
 public class Backtest {
 	public static void main(String[] args){
-		// initialisieren
-		// ReadFiles r = new ReadFiles();
-		// RollingMean m = new RollingMean();
-		BacktestEngine engine = new BacktestEngine();
 		
-		// get filename
+        for(int i = 0; i < args.length; i++) {
+            System.out.println(args[i]);
+        }
+		// initialisieren
+
+		BacktestEngine engine = new BacktestEngine();
 		
 		//compute SMA
 		
 		engine.setInvestment(1000);
-		engine.computeSMA(500);
-		
-		float[] test = engine.computeSMA(10);
-		//System.out.println(test);
-		
-		//engine.SMAcrossover(470,1000);
 		
 		long startTime = System.currentTimeMillis();
 		
-		engine.optimizeSMA(200, 600, 700, 2000);
-		//engine.optimizeSMA(200, 220, 1000, 1040);
+		//engine.optimizeSMA(300, 600, 900, 2100);
+		engine.optimizeSMA(250, 500, 800, 1300);
 		
 		long estimatedTime = System.currentTimeMillis() - startTime;
 		System.out.println("\n Elapsed Time is: "+estimatedTime);

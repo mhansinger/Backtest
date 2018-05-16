@@ -20,6 +20,7 @@ public class RollingMean{
 	RollingMean(){
 		// initialisiert den data reader und das dataArray
 		r.getfilename();
+		//r.getlimit();
 		r.convertToArray();
 		r.createDataArray();
 		series = r.dataArray;
